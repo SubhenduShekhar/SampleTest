@@ -30,8 +30,8 @@ When("I click on signout link", async() => {
 });
 
 When("I enter credentials", async() => {
-    process.env.TestUserName = "test2.user@email.com"
-    process.env.TestPassword = "Password1"
+    // process.env.TestUserName = "test2.user@email.com"
+    // process.env.TestPassword = "Password1"
     await LoginPage.login();
 });
 
@@ -39,8 +39,8 @@ When("I click on signin button for login", async() => {
     await LoginPage.clickSignIn();
 });
 
-When("I select t-shirts", async() => {
-    await HomePage.selectItems();
+When("I select t-shirts of name {string}", async(productName) => {
+    await HomePage.selectItems(productName);
 });
 
 When("I click on add to cart", async() => {

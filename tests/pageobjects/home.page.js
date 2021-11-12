@@ -5,7 +5,7 @@ class HomePage extends Page {
     get accountName() { return $('[class="account"]'); }
     get signOutBtn() { return $('[class="logout"]'); }
     get tShirtsTab() { return $('(//*[@title="T-shirts"])[2]'); }
-    get item() { return $('(//*[@title="Faded Short Sleeve T-shirts"])[2]'); }
+    item = async function(productName) { return $('(//*[@title="' + productName + '"])[2]'); }
     get addToCart() { return $('[title="Add to cart"]'); }
     get proceedToCheckout() { return $('[title="Proceed to checkout"]'); }
     get proceedToCheckout2() { return $('(//*[@title="Proceed to checkout"])[2]'); }
@@ -14,11 +14,20 @@ class HomePage extends Page {
     get termsAndCondition() { return $('[for="cgv"]'); }
     get paymentByBankWire() { return $('[class="bankwire"]'); }
     get cartItemMessage() { return $('[class="ajax_cart_product_txt "]'); }
-
+    /**
+     * Clicks on general sign in button on top right corner
+     */
     async clickSignIn() {
         await this.signInBtn.click();
     }
-
+    /**
+     * Upon successful registration, user name is displayed on top right corner.
+     * 
+     * This function validates whether the account name appears there or not.
+     * 
+     * This can also be used to verify whether the lgout is successful
+     * @param {Boolean} expectToPresent Set true if expecting the message to appear
+     */
     async validateSuccessfulRegistration(expectToPresent) {
         if(expectToPresent == undefined)
             expectToPresent = true;
@@ -38,11 +47,11 @@ class HomePage extends Page {
         await this.accountName.waitForDisplayed({timeout: 3000, reverse: true});
     }
 
-    async selectItems() {
+    async selectItems(productName) {
         await this.tShirtsTab.click();
-        await this.item.scrollIntoView();
-        await this.item.waitForDisplayed({timeout: 3000});
-        await this.item.moveTo();
+        await (await this.item(productName)).scrollIntoView();
+        await (await this.item(productName)).waitForDisplayed({timeout: 3000});
+        await (await this.item(productName)).moveTo();
     }
 
     async clickAddToCart() {
@@ -78,7 +87,7 @@ class HomePage extends Page {
 
     async validatebankWire() {
         await this.paymentByBankWire.waitForDisplayed({timeout: 5000});
-        expect(this.paymentByBankWire.isDisplayed()).toBe(true);
+        expect(await this.paymentByBankWire.isDisplayed()).toBe(true);
     }
 
     async validateCartMessage() {
